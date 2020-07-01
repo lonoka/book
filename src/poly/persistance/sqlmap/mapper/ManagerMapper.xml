@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.ManagerMapper">
+	<select id="getUserList" parameterType="int"
+		resultType="UserDTO">
+		<![CDATA[
+		SELECT
+		USER_NAME,
+		USER_ID,
+		USER_MAIL,
+		USER_DATE,
+		USER_GEN,
+		USER_AUTHOR,
+		USER_STAT,
+		USER_DEL
+		FROM
+			(
+				SELECT
+					A.*,
+					ROWNUM AS RNUM
+				FROM
+					(
+						SELECT
+							*
+						FROM
+							USER_INFO
+						ORDER BY
+							USER_ID ASC
+					)A
+				WHERE
+					ROWNUM <= #{endNum}
+			)
+		WHERE
+			RNUM >= #{startNum}
+		]]>
+	</select>
+	
+	<select id="getUserInfo" parameterType="String" resultType="UserDTO">
+		SELECT		
+			USER_AUTHOR,
+			USER_STAT
+		FROM
+			USER_INFO
+		WHERE
+			USER_ID=#{userCheck}
+	</select>
+	
+	<update id="alterAuthor" parameterType="String">
+		UPDATE
+			USER_INFO
+		SET
+			USER_AUTHOR = 1
+		WHERE
+			USER_ID = #{userCheck}
+	</update>
+	
+	<update id="alterUser" parameterType="String">
+		UPDATE
+			USER_INFO
+		SET
+			USER_AUTHOR = 0
+		WHERE
+			USER_ID = #{userCheck}
+	</update>
+	
+	<update id="alterStop" parameterType="String">
+		UPDATE
+			USER_INFO
+		SET
+			USER_STAT = 1
+		WHERE
+			USER_ID = #{userCheck}
+	</update>
+	<update id="alterNomal" parameterType="String">
+		UPDATE
+			USER_INFO
+		SET
+			USER_STAT = 0,
+			USER_DEL = null
+		WHERE
+			USER_ID = #{userCheck}
+	</update>
+	
+	<update id="alterDel" parameterType="String">
+		UPDATE
+			USER_INFO
+		SET
+			USER_STAT = 2,
+			USER_DEL = SYSDATE
+		WHERE
+			USER_ID = #{userCheck}
+	</update>
+	
+	<delete id="deleteUserInfo" parameterType="String">
+		DELETE
+		FROM
+			USER_INFO
+		WHERE
+			USER_ID=#{userId}
+	</delete>
+	
+	<!-- 유저수 -->
+	<select id="getUserCnt" resultType="int">
+		SELECT
+			COUNT(USER_ID)
+		FROM
+			USER_INFO
+	</select>
+	
+	<select id="getCntId" parameterType="String" resultType="int">
+		SELECT
+			COUNT(USER_ID)
+		FROM
+			USER_INFO
+		WHERE
+			USER_ID LIKE'%'||#{searchCont}||'%'
+	</select>
+	
+	<select id="getSearchIdList" parameterType="UserDTO" resultType="UserDTO">
+		<![CDATA[
+		SELECT
+		USER_NAME,
+		USER_ID,
+		USER_MAIL,
+		USER_DATE,
+		USER_GEN,
+		USER_AUTHOR,
+		USER_STAT,
+		USER_DEL
+		FROM
+			(
+				SELECT
+					A.*,
+					ROWNUM AS RNUM
+				FROM
+					(
+						SELECT
+							*
+						FROM
+							USER_INFO
+						WHERE
+							USER_ID LIKE '%'||#{searchCont}||'%'
+						ORDER BY
+							USER_ID ASC
+					)A
+				WHERE
+					ROWNUM <= #{endNum}
+			)
+		WHERE
+			RNUM >= #{startNum}
+		]]>
+	</select>
+	
+	
+	
+	<select id="getCntName" parameterType="String" resultType="int">
+		SELECT
+			COUNT(USER_ID)
+		FROM
+			USER_INFO
+		WHERE
+			USER_NAME LIKE '%'||#{searchCont}||'%'
+	</select>
+	
+	<select id="getSearchNameList" parameterType="UserDTO" resultType="UserDTO">
+		<![CDATA[
+		SELECT
+		USER_NAME,
+		USER_ID,
+		USER_MAIL,
+		USER_DATE,
+		USER_GEN,
+		USER_AUTHOR,
+		USER_STAT,
+		USER_DEL
+		FROM
+			(
+				SELECT
+					A.*,
+					ROWNUM AS RNUM
+				FROM
+					(
+						SELECT
+							*
+						FROM
+							USER_INFO
+						WHERE
+							USER_NAME LIKE '%'||#{searchCont}||'%'
+						ORDER BY
+							USER_ID ASC
+					)A
+				WHERE
+					ROWNUM <= #{endNum}
+			)
+		WHERE
+			RNUM >= #{startNum}
+		]]>
+	</select>
+	
+	<select id="getCntStat" parameterType="String" resultType="int">
+		SELECT
+			COUNT(USER_ID)
+		FROM
+			USER_INFO
+		WHERE
+			USER_STAT = #{searchCont}
+	</select>
+	
+	
+	<select id="getSearchStatList" parameterType="UserDTO" resultType="UserDTO">
+		<![CDATA[
+		SELECT
+		USER_NAME,
+		USER_ID,
+		USER_MAIL,
+		USER_DATE,
+		USER_GEN,
+		USER_AUTHOR,
+		USER_STAT,
+		USER_DEL
+		FROM
+			(
+				SELECT
+					A.*,
+					ROWNUM AS RNUM
+				FROM
+					(
+						SELECT
+							*
+						FROM
+							USER_INFO
+						WHERE
+							USER_STAT LIKE '%'||#{searchCont}||'%'
+						ORDER BY
+							USER_ID ASC
+					)A
+				WHERE
+					ROWNUM <= #{endNum}
+			)
+		WHERE
+			RNUM >= #{startNum}
+		]]>
+	</select>
+	
+	<!-- 회원정보 수정 -->
+	<update id="updateCrmUserInfo" parameterType="UserDTO">
+		UPDATE
+			USER_INFO
+		SET
+			USER_NAME = #{user_name},
+			PASSWORD = #{password},
+			USER_DATE = #{user_date},
+			USER_GEN = #{user_gen},
+			CHG_ID = #{chg_id},
+			CHG_DT = SYSDATE
+		WHERE
+			USER_ID = #{user_id}
+	</update>
+
+</mapper>

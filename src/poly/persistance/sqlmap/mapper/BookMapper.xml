@@ -1,0 +1,1304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.BookMapper">
+	<!-- 추천도서 쿼리 -->
+	<select id="recBook" resultType="BookDTO">
+	<![CDATA[
+		SELECT rec_key, TITLE, AUTHOR,
+		COVER_URL, PUBLISHER
+		FROM
+			(
+				SELECT *
+				FROM
+				BOOK_RECOMMEND
+				ORDER BY
+				M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+			)
+		WHERE
+		ROWNUM<=6
+		
+		]]>
+	</select>
+
+	<!-- 검색 기록테이블에 검색 기록이 있는지 없는지 -->
+	<select id="checkSearch" parameterType="recDTO" resultType="int">
+		SELECT COUNT(*)
+		FROM
+		SEARCH_COUNT
+		WHERE USER_ID=#{user_id} AND
+		CLASSFY=#{classfy}
+	</select>
+
+	<!-- 검색 기록테이블에 없는 경우 -->
+	<insert id="createSearch" parameterType="recDTO">
+		INSERT INTO SEARCH_COUNT
+		(
+		SEARCH_NO,
+		USER_ID,
+		CLASSFY,
+		COUNT
+		)
+		VALUES
+		(
+		SEARCH_SEQUENCE.NEXTVAL,
+		#{user_id},
+		#{classfy},
+		1
+		)
+	</insert>
+
+	<!-- 검색 기록테이블에 있는 경우 -->
+	<update id="countSearch" parameterType="recDTO">
+		UPDATE SEARCH_COUNT
+		SET
+		COUNT = COUNT + 1
+		WHERE USER_ID=#{user_id} AND CLASSFY=#{classfy}
+	</update>
+
+	<!-- 추천도서테이블 확인 -->
+	<select id="checkRecommend" parameterType="recDTO"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM
+		BOOK_RECOMMEND
+		WHERE REC_KEY = #{rec_key}
+	</select>
+
+	<!-- 비회원 추천도서 테이블 추가 -->
+	<insert id="createRecommendNM" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		NONM
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 비회원 추천도서 테이블 카운트 -->
+	<update id="countRecommendNM" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		NONM = NONM + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 10대 남자 추천도서 테이블 추가 -->
+	<insert id="createRecommend10M" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		M10
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 10대 남자 추천도서 테이블 카운트 -->
+	<update id="countRecommend10M" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		M10 = M10 + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 20대 남자 추천도서 테이블 추가 -->
+	<insert id="createRecommend20M" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		M20
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 20대 남자 추천도서 테이블 카운트 -->
+	<update id="countRecommend20M" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		M20 = M20 + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 30대 남자 추천도서 테이블 추가 -->
+	<insert id="createRecommend30M" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		M30
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 30대 남자 추천도서 테이블 카운트 -->
+	<update id="countRecommend30M" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		M30 = M30 + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 40대 남자 추천도서 테이블 추가 -->
+	<insert id="createRecommend40M" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		M40
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 40대 남자 추천도서 테이블 카운트 -->
+	<update id="countRecommend40M" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		M40 = M40 + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 50대 남자 추천도서 테이블 추가 -->
+	<insert id="createRecommend50M" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		M50
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 50대 남자 추천도서 테이블 카운트 -->
+	<update id="countRecommend50M" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		M50 = M50 + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 10대 여자 추천도서 테이블 추가 -->
+	<insert id="createRecommend10W" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		W10
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 10대 여자 추천도서 테이블 카운트 -->
+	<update id="countRecommend10W" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		W10 = W10 + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 20대 여자 추천도서 테이블 추가 -->
+	<insert id="createRecommend20W" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		W20
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 20대 여자 추천도서 테이블 카운트 -->
+	<update id="countRecommend20W" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		W20 = W20 + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 30대 여자 추천도서 테이블 추가 -->
+	<insert id="createRecommend30W" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		W30
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 30대 여자 추천도서 테이블 카운트 -->
+	<update id="countRecommend30W" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		W30 = W30 + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 40대 여자 추천도서 테이블 추가 -->
+	<insert id="createRecommend40W" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		W40
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 40대 여자 추천도서 테이블 카운트 -->
+	<update id="countRecommend40W" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		W40 = W40 + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 50대 여자 추천도서 테이블 추가 -->
+	<insert id="createRecommend50W" parameterType="recDTO">
+		INSERT INTO
+		BOOK_RECOMMEND
+		(
+		REC_KEY,
+		TITLE,
+		AUTHOR,
+		COVER_URL,
+		PUBLISHER,
+		CLASSFY,
+		W50
+		)
+		VALUES
+		(
+		#{rec_key},
+		#{title},
+		#{author},
+		#{cover_url},
+		#{publisher},
+		#{classfy},
+		1
+		)
+	</insert>
+	<!-- 50대 여자 추천도서 테이블 카운트 -->
+	<update id="countRecommend50W" parameterType="recDTO">
+		UPDATE
+		BOOK_RECOMMEND
+		SET
+		W50 = W50 + 1
+		WHERE REC_KEY = #{rec_key}
+	</update>
+
+	<!-- 유저 검색코드중 가장 많은거 가져오기 -->
+	<select id="getUserRec" parameterType="String"
+		resultType="String">
+		<![CDATA[
+		SELECT CLASSFY
+		FROM
+			(
+				SELECT *
+				FROM
+				SEARCH_COUNT
+				WHERE
+				USER_ID=#{userId}
+				ORDER BY
+				COUNT DESC
+			)
+		WHERE
+		ROWNUM<=1
+		]]>
+
+	</select>
+
+	<!-- 사용자 맞춤 추천도서 -->
+	<select id="userRec" parameterType="String" resultType="BookDTO">
+		<![CDATA[
+		SELECT rec_key, TITLE, AUTHOR,
+		COVER_URL, PUBLISHER
+		FROM
+			(
+				SELECT *
+				FROM
+				BOOK_RECOMMEND
+				WHERE
+				CLASSFY LIKE #{classfy}||'_'
+				ORDER BY
+				M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+			)
+		WHERE
+		ROWNUM<=6
+		]]>
+	</select>
+
+	<!-- 회원 검색기록 삭제 -->
+	<delete id="deleteUserSearch" parameterType="String">
+		DELETE
+		FROM
+		SEARCH_COUNT
+		WHERE
+		USER_ID=#{user_id}
+	</delete>
+
+	<!-- 사용자 맞춤 추천도서 -->
+	<select id="userRecSearch" parameterType="recDTO"
+		resultType="BookDTO">
+
+		SELECT rec_key, TITLE, AUTHOR,
+		COVER_URL, PUBLISHER
+		FROM
+		(
+		SELECT *
+		FROM
+		BOOK_RECOMMEND
+		<if test='val1.equals("회원")'>
+			ORDER BY
+			M10+M20+M30+M40+M50+W10+W20+W30+W40+W50 DESC
+		</if>
+		<if test='val1.equals("비회원")'>
+			ORDER BY
+			NONM DESC
+		</if>
+		<if test='val1.equals("나이")'>
+			<if test='val2.equals("10대")'>
+				<if test='val3.equals("전체")'>
+					<![CDATA[
+					WHERE M10>0 OR W10>0
+					]]>
+					ORDER BY
+					M10+W10 DESC
+				</if>
+				<if test='val3.equals("남자")'>
+					<![CDATA[
+					WHERE M10>0
+					]]>
+					ORDER BY
+					M10 DESC
+				</if>
+				<if test='val3.equals("여자")'>
+					<![CDATA[
+					WHERE W10>0
+					]]>
+					ORDER BY
+					W10 DESC
+				</if>
+			</if>
+			<if test='val2.equals("20대")'>
+				<if test='val3.equals("전체")'>
+					<![CDATA[
+					WHERE M20>0 OR W20>0
+					]]>
+					ORDER BY
+					M20+W20 DESC
+				</if>
+				<if test='val3.equals("남자")'>
+					<![CDATA[
+					WHERE M20>0
+					]]>
+					ORDER BY
+					M20 DESC
+				</if>
+				<if test='val3.equals("여자")'>
+					<![CDATA[
+					WHERE W20>0
+					]]>
+					ORDER BY
+					W20 DESC
+				</if>
+			</if>
+			<if test='val2.equals("30대")'>
+				<if test='val3.equals("전체")'>
+					<![CDATA[
+					WHERE M30>0 OR W30>0
+					]]>
+					ORDER BY
+					M30+W30 DESC
+				</if>
+				<if test='val3.equals("남자")'>
+					<![CDATA[
+					WHERE M30>0
+					]]>
+					ORDER BY
+					M30 DESC
+				</if>
+				<if test='val3.equals("여자")'>
+					<![CDATA[
+					WHERE W30>0
+					]]>
+					ORDER BY
+					W30 DESC
+				</if>
+			</if>
+			<if test='val2.equals("40대")'>
+				<if test='val3.equals("전체")'>
+					<![CDATA[
+					WHERE M40>0 OR W40>0
+					]]>
+					ORDER BY
+					M40+W40 DESC
+				</if>
+				<if test='val3.equals("남자")'>
+					<![CDATA[
+					WHERE M40>0
+					]]>
+					ORDER BY
+					M40 DESC
+				</if>
+				<if test='val3.equals("여자")'>
+					<![CDATA[
+					WHERE W40>0
+					]]>
+					ORDER BY
+					W40 DESC
+				</if>
+			</if>
+			<if test='val2.equals("50대")'>
+				<if test='val3.equals("전체")'>
+					<![CDATA[
+					WHERE M50>0 OR W50>0
+					]]>
+					ORDER BY
+					M50+W50 DESC
+				</if>
+				<if test='val3.equals("남자")'>
+					<![CDATA[
+					WHERE M50>0
+					]]>
+					ORDER BY
+					M50 DESC
+				</if>
+				<if test='val3.equals("여자")'>
+					<![CDATA[
+					WHERE W50>0
+					]]>
+					ORDER BY
+					W50 DESC
+				</if>
+			</if>
+		</if>
+		<if test='val1.equals("분류")'>
+			<if test='val2.equals("총류")'>
+				<if test='val3.equals("전체")'>
+					WHERE
+					CLASSFY LIKE 0||'%'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("총류")'>
+					WHERE
+					CLASSFY LIKE 00||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("도서학, 서지학")'>
+					WHERE
+					CLASSFY LIKE 01||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("문헌정보학")'>
+					WHERE
+					CLASSFY LIKE 02||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("백과사전")'>
+					WHERE
+					CLASSFY LIKE 03||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("강연집, 수필집, 연설문집")'>
+					WHERE
+					CLASSFY LIKE 04||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("일반 연속간행물")'>
+					WHERE
+					CLASSFY LIKE 05||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("일반 학회, 단체, 협회, 기관")'>
+					WHERE
+					CLASSFY LIKE 06||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("신문, 저널리즘")'>
+					WHERE
+					CLASSFY LIKE 07||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("일반전집, 총서")'>
+					WHERE
+					CLASSFY LIKE 08||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("향토자료")'>
+					WHERE
+					CLASSFY LIKE 09||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+			</if>
+			<if test='val2.equals("철학")'>
+				<if test='val3.equals("전체")'>
+					WHERE
+					CLASSFY LIKE 1||'%'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("철학")'>
+					WHERE
+					CLASSFY LIKE 10||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("형이상학")'>
+					WHERE
+					CLASSFY LIKE 11||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("인식론, 인과론, 인간학")'>
+					WHERE
+					CLASSFY LIKE 12||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("철학의 체계")'>
+					WHERE
+					CLASSFY LIKE 13||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("경학")'>
+					WHERE
+					CLASSFY LIKE 14||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("동양철학, 사상")'>
+					WHERE
+					CLASSFY LIKE 15||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("서양철학")'>
+					WHERE
+					CLASSFY LIKE 16||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("논리학")'>
+					WHERE
+					CLASSFY LIKE 17||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("심리학")'>
+					WHERE
+					CLASSFY LIKE 18||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("윤리학, 도덕철학")'>
+					WHERE
+					CLASSFY LIKE 19||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+			</if>
+			<if test='val2.equals("종교")'>
+				<if test='val3.equals("전체")'>
+					WHERE
+					CLASSFY LIKE 2||'%'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("종교")'>
+					WHERE
+					CLASSFY LIKE 20||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("비교종교")'>
+					WHERE
+					CLASSFY LIKE 21||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("불교")'>
+					WHERE
+					CLASSFY LIKE 22||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("기독교")'>
+					WHERE
+					CLASSFY LIKE 23||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("도교")'>
+					WHERE
+					CLASSFY LIKE 24||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("천도교")'>
+					WHERE
+					CLASSFY LIKE 25||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("힌두교, 브라만교")'>
+					WHERE
+					CLASSFY LIKE 27||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("이슬람교(회교)")'>
+					WHERE
+					CLASSFY LIKE 28||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("기타 제종교")'>
+					WHERE
+					CLASSFY LIKE 29||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+			</if>
+			<if test='val2.equals("사회과학")'>
+				<if test='val3.equals("전체")'>
+					WHERE
+					CLASSFY LIKE 3||'%'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("사회과학")'>
+					WHERE
+					CLASSFY LIKE 30||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("통계자료")'>
+					WHERE
+					CLASSFY LIKE 31||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("경제학")'>
+					WHERE
+					CLASSFY LIKE 32||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("사회학, 사회문제")'>
+					WHERE
+					CLASSFY LIKE 33||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("정치학")'>
+					WHERE
+					CLASSFY LIKE 34||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("행정학")'>
+					WHERE
+					CLASSFY LIKE 35||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("법률, 법학")'>
+					WHERE
+					CLASSFY LIKE 36||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("교육학")'>
+					WHERE
+					CLASSFY LIKE 37||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("풍속, 예절, 민속학")'>
+					WHERE
+					CLASSFY LIKE 38||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("국방, 군사학")'>
+					WHERE
+					CLASSFY LIKE 39||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+			</if>
+			<if test='val2.equals("자연과학")'>
+				<if test='val3.equals("전체")'>
+					WHERE
+					CLASSFY LIKE 4||'%'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("자연과학")'>
+					WHERE
+					CLASSFY LIKE 40||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("수학")'>
+					WHERE
+					CLASSFY LIKE 41||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("물리학")'>
+					WHERE
+					CLASSFY LIKE 42||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("화학")'>
+					WHERE
+					CLASSFY LIKE 43||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("천문학")'>
+					WHERE
+					CLASSFY LIKE 44||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("지구과학")'>
+					WHERE
+					CLASSFY LIKE 45||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("광물학")'>
+					WHERE
+					CLASSFY LIKE 46||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("생명과학")'>
+					WHERE
+					CLASSFY LIKE 47||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("식물학")'>
+					WHERE
+					CLASSFY LIKE 48||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("동물학")'>
+					WHERE
+					CLASSFY LIKE 49||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+			</if>
+			<if test='val2.equals("기술과학")'>
+				<if test='val3.equals("전체")'>
+					WHERE
+					CLASSFY LIKE 5||'%'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("기술과학")'>
+					WHERE
+					CLASSFY LIKE 50||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("의학")'>
+					WHERE
+					CLASSFY LIKE 51||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("농업, 농학")'>
+					WHERE
+					CLASSFY LIKE 52||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("공학, 공업 일반, 토목공학, 환경공학")'>
+					WHERE
+					CLASSFY LIKE 53||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("건축공학")'>
+					WHERE
+					CLASSFY LIKE 54||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("기계공학")'>
+					WHERE
+					CLASSFY LIKE 55||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("전기공학, 전자공학")'>
+					WHERE
+					CLASSFY LIKE 56||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("화학공학")'>
+					WHERE
+					CLASSFY LIKE 57||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("제조업")'>
+					WHERE
+					CLASSFY LIKE 58||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("생활과학")'>
+					WHERE
+					CLASSFY LIKE 59||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+			</if>
+			<if test='val2.equals("예술")'>
+				<if test='val3.equals("전체")'>
+					WHERE
+					CLASSFY LIKE 6||'%'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("예술")'>
+					WHERE
+					CLASSFY LIKE 60||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("조각 및 조형미술")'>
+					WHERE
+					CLASSFY LIKE 62||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("공예, 장식미술")'>
+					WHERE
+					CLASSFY LIKE 63||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("서예")'>
+					WHERE
+					CLASSFY LIKE 64||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("회화, 도화")'>
+					WHERE
+					CLASSFY LIKE 65||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("사진예술")'>
+					WHERE
+					CLASSFY LIKE 66||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("음악")'>
+					WHERE
+					CLASSFY LIKE 67||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("공연예술 및 매체예술")'>
+					WHERE
+					CLASSFY LIKE 68||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("오락, 스포츠")'>
+					WHERE
+					CLASSFY LIKE 69||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+			</if>
+			<if test='val2.equals("언어")'>
+				<if test='val3.equals("전체")'>
+					WHERE
+					CLASSFY LIKE 7||'%'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("언어")'>
+					WHERE
+					CLASSFY LIKE 70||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("한국어")'>
+					WHERE
+					CLASSFY LIKE 71||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("중국어")'>
+					WHERE
+					CLASSFY LIKE 72||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("일본어 및 기타 아시아제어")'>
+					WHERE
+					CLASSFY LIKE 73||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("영어")'>
+					WHERE
+					CLASSFY LIKE 74||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("독일어")'>
+					WHERE
+					CLASSFY LIKE 75||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("프랑스어")'>
+					WHERE
+					CLASSFY LIKE 76||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("스페인어")'>
+					WHERE
+					CLASSFY LIKE 77||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("이탈리아어")'>
+					WHERE
+					CLASSFY LIKE 78||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("기타 제어")'>
+					WHERE
+					CLASSFY LIKE 79||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+			</if>
+			<if test='val2.equals("문학")'>
+				<if test='val3.equals("전체")'>
+					WHERE
+					CLASSFY LIKE 8||'%'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("문학")'>
+					WHERE
+					CLASSFY LIKE 80||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("한국문학")'>
+					WHERE
+					CLASSFY LIKE 81||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("중국문학")'>
+					WHERE
+					CLASSFY LIKE 82||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("일본문학 및 기타 아시아문학")'>
+					WHERE
+					CLASSFY LIKE 83||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("영미문학")'>
+					WHERE
+					CLASSFY LIKE 84||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("독일문학")'>
+					WHERE
+					CLASSFY LIKE 85||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("프랑스문학")'>
+					WHERE
+					CLASSFY LIKE 86||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("스페인문학 및 포르투갈문학")'>
+					WHERE
+					CLASSFY LIKE 87||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("이탈리아문학")'>
+					WHERE
+					CLASSFY LIKE 88||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("기타 제문학")'>
+					WHERE
+					CLASSFY LIKE 89||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+			</if>
+			<if test='val2.equals("역사")'>
+				<if test='val3.equals("전체")'>
+					WHERE
+					CLASSFY LIKE 9||'%'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("역사")'>
+					WHERE
+					CLASSFY LIKE 90||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("아시아")'>
+					WHERE
+					CLASSFY LIKE 91||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("유럽")'>
+					WHERE
+					CLASSFY LIKE 92||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("아프리카")'>
+					WHERE
+					CLASSFY LIKE 93||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("북아메리카")'>
+					WHERE
+					CLASSFY LIKE 94||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("남아메리카")'>
+					WHERE
+					CLASSFY LIKE 95||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("오세아니아, 양극지방")'>
+					WHERE
+					CLASSFY LIKE 96||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("미분류")'>
+					WHERE
+					CLASSFY LIKE 97||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("지리")'>
+					WHERE
+					CLASSFY LIKE 98||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+				<if test='val3.equals("전기")'>
+					WHERE
+					CLASSFY LIKE 99||'_'
+					ORDER BY
+					M10+M20+M30+M40+M50+W10+W20+W30+W40+W50+NONM DESC
+				</if>
+			</if>
+		</if>
+		)
+		WHERE
+		<![CDATA[
+		ROWNUM<=6
+		]]>
+	</select>
+
+	<!-- 사용자 검색 리스트 -->
+	<select id="getUserRecList" parameterType="String"
+		resultType="recDTO">
+		SELECT CLASSFY, COUNT
+		FROM SEARCH_COUNT
+		WHERE USER_ID =
+		#{user_id}
+		ORDER BY COUNT DESC
+	</select>
+
+</mapper>
